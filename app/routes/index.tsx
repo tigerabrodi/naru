@@ -5,7 +5,7 @@ export default function Index() {
         <li>lsdskla;kdl;aks</li>
         <li>
           <a target="_blank" href="https://remix.run/docs" rel="noreferrer">
-            Remix Docs
+            klslk
           </a>
         </li>
       </ul>
