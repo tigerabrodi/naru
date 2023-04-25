@@ -1,5 +1,5 @@
 :root {
-  --colors-brown: #090b0b;
+  --colors-dark: #090b0b;
   --colors-red: #de4335;
   --colors-light: #131616;
   --colors-pink: #ff7e42;
@@ -27,7 +27,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: var(--colors-brown);
+  background-color: var(--colors-dark);
 }
 
 /* Custom Resets */
@@ -67,4 +67,23 @@ button:focus-visible {
   outline: 2px solid white;
   outline-offset: 2px;
   box-shadow: 0 0 0 6px black !important;
+}
+
+.navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 10px;
+  background-color: var(--colors-dark);
+}
+
+.navigation h1 {
+  font-weight: 700;
+  font-size: calc(1rem * 18 / 16);
+  color: var(--colors-pink);
+}
+
+.navigation svg {
+  width: 54px;
 }
