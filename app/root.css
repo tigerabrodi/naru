@@ -87,3 +87,17 @@ button:focus-visible {
 .navigation svg {
   width: 54px;
 }
+
+@media screen and (min-width: 1024px) {
+  .navigation {
+    padding: 10px 40px;
+  }
+
+  .navigation h1 {
+    font-size: calc(1rem * 28 / 16);
+  }
+
+  .navigation svg {
+    width: 77px;
+  }
+}
