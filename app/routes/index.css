@@ -89,3 +89,53 @@ main {
   width: 18px;
   height: 18px;
 }
+
+@media screen and (min-width: 1024px) {
+  main {
+    max-width: 1200px;
+    row-gap: 30px;
+  }
+
+  .chat-container {
+    max-height: calc(90vh - 45px - 67px);
+    padding: 20px 50px;
+  }
+
+  .chat-message p {
+    font-size: calc(1rem * 14 / 16);
+    padding: 10px;
+  }
+
+  .input-container {
+    column-gap: 20px;
+    padding: 0;
+  }
+
+  .input-container input {
+    font-size: calc(1rem * 18 / 16);
+    padding: 8px;
+    width: 90%;
+    box-shadow: 0 0 4px var(--colors-pink);
+  }
+
+  .input-container svg {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+.spinning {
+  animation-name: spin;
+  animation-duration: 0.5s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
