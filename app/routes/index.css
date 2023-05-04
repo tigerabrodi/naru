@@ -50,6 +50,7 @@ main {
   color: var(--colors-light);
   background-color: var(--colors-red);
   max-width: 50%;
+  white-space: pre-wrap;
 }
 
 .chat-message.owner {
@@ -73,7 +74,7 @@ main {
   background-color: var(--colors-brown);
 }
 
-.input-container input {
+.input-container textarea {
   border-radius: 5px;
   background-color: var(--colors-pink);
   min-width: 245px;
@@ -83,11 +84,42 @@ main {
   font-size: calc(1rem * 10 / 16);
   font-weight: 500;
   padding: 5px;
+  resize: none;
 }
 
 .input-container svg {
   width: 18px;
   height: 18px;
+}
+
+#loading-text {
+  display: flex;
+  align-items: center;
+  column-gap: 8px;
+  padding: 10px 20px;
+}
+
+#loading-text span {
+  animation: bounce 0.6s ease-in-out infinite;
+  font-weight: bold;
+}
+
+#loading-text span:nth-of-type(2) {
+  animation-delay: 0.1s;
+}
+
+#loading-text span:nth-of-type(3) {
+  animation-delay: 0.2s;
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
 }
 
 @media screen and (min-width: 1024px) {
@@ -111,11 +143,12 @@ main {
     padding: 0;
   }
 
-  .input-container input {
+  .input-container textarea {
     font-size: calc(1rem * 18 / 16);
-    padding: 8px;
-    width: 90%;
+    padding: 10px;
+    width: 95%;
     box-shadow: 0 0 4px var(--colors-pink);
+    height: 70px;
   }
 
   .input-container svg {
