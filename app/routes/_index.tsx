@@ -137,7 +137,6 @@ export default function Index() {
         <button
           type="submit"
           aria-label="Send message"
-          className={`${isLoadingOrSubmitting ? 'spinning' : ''}`}
           disabled={newValue.length === 0 || isLoadingOrSubmitting}
         >
           <Kunai />
@@ -240,13 +239,6 @@ export const action = async ({ request }: DataFunctionArgs) => {
   const newMessagesInString = `${entireExistingMessageInString}
   Naruto: ${plainMessageFromNaruto}
   `
-
-  console.log({
-    newMessageFromNaruto,
-    newMessageFromAuthor,
-    newMessages,
-    newMessagesInString,
-  })
 
   return {
     messageState: {

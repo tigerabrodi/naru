@@ -156,19 +156,3 @@ main {
     height: 36px;
   }
 }
-
-.spinning {
-  animation-name: spin;
-  animation-duration: 0.5s;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-}
-
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
