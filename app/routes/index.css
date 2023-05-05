@@ -10,7 +10,7 @@ main {
   width: 100%;
   max-height: calc(100vh - 94px);
   height: 100%;
-  row-gap: 10px;
+  row-gap: 26px;
   display: flex;
   flex-direction: column;
   padding: 10px 20px;
@@ -85,6 +85,7 @@ main {
   font-weight: 500;
   padding: 5px;
   resize: none;
+  overflow: hidden;
 }
 
 .input-container svg {
@@ -145,14 +146,14 @@ main {
 
   .input-container textarea {
     font-size: calc(1rem * 18 / 16);
-    padding: 10px;
+    padding: 8px;
     width: 95%;
     box-shadow: 0 0 4px var(--colors-pink);
     height: 70px;
   }
 
   .input-container svg {
-    width: 36px;
-    height: 36px;
+    width: 40px;
+    height: 40px;
   }
 }
