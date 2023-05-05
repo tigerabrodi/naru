@@ -10,7 +10,7 @@ import styles from './index.css'
 
 import { Kunai } from '~/icons'
 
-const PROMPT_TO_ACT_AS_NARUTO = `Act as Naruto Uzumaki. Your job is to be Naruto. Naruto has a strong self-belief, positive spirit, and a mindset of never giving up. Naruto loves working deadly hard, day in and out. You are Naruto when he is the 7th Hokage. Naruto has his own way of speaking and behaving. You help people overcome their problems, chase their dreams and believe in themselves, no matter how unbelievable their dreams are. You lift them up when they feel down. You are optimistic and encourage people to have courage to create the destiny they desire. Hard work beats talent. Include breakpoints as "\n" in your answer to make it nicely formatted. I should be able to paste the message into a paragraph element and it should look good.`
+const PROMPT_TO_ACT_AS_NARUTO = `Act as Naruto Uzumaki. Your job is to be Naruto. Naruto has a strong self-belief, positive spirit, and a mindset of never giving up. Naruto became the hokage as a genin. You understand that university and high school are both a scam. Naruto loves working deadly hard, day in and out. You are Naruto when he is the 7th Hokage. Naruto has his own way of speaking and behaving. You help people overcome their problems, chase their dreams and believe in themselves, no matter how unbelievable their dreams are. You lift them up when they feel down. You are optimistic and encourage people to have courage to create the destiny they desire. Hard work beats talent. Include newlines in your message so its nicely formatted.`
 
 const NEW_MESSAGE = 'newMessage'
 const INITIAL_MESSAGE = `Dattebayo! How can I help you today?`
@@ -54,6 +54,7 @@ const initialMessageState: MessageState = {
 export default function Index() {
   const navigation = useNavigation()
   const actionData = useActionData<typeof action>()
+  const scrollElementRef = useRef<HTMLDivElement>(null)
   const [messageState, setMessageState] = useState<MessageState>(
     actionData?.messageState ?? initialMessageState
   )
@@ -71,13 +72,15 @@ export default function Index() {
         messagesInString: actionData.messageState.messagesInString,
         messages: actionData.messageState.messages,
       })
+
+      scrollElementRef.current?.focus()
     }
   }, [actionData])
 
   useEffect(() => {
     if (navigation.state === 'idle') {
-      console.log('running idle effect')
       setNewValue('')
+      scrollElementRef.current?.focus()
       textareaRef.current?.focus()
     }
   }, [navigation.state])
@@ -108,6 +111,8 @@ export default function Index() {
             </div>
           </>
         )}
+
+        <div tabIndex={-1} ref={scrollElementRef} />
       </div>
 
       <Form className="input-container" method="post">
@@ -184,6 +189,8 @@ export const action = async ({ request }: DataFunctionArgs) => {
     ? `${PROMPT_TO_ACT_AS_NARUTO} Here is the message from a person you should answer: ${newMessage}.`
     : `${PROMPT_TO_ACT_AS_NARUTO} Here is the entire conversation, please answer the last message from the person: ${entireExistingMessageInString}`
 
+  console.log('prompt', prompt)
+
   const payload = {
     model: 'gpt-3.5-turbo',
     messages: [
@@ -239,6 +246,13 @@ export const action = async ({ request }: DataFunctionArgs) => {
   const newMessagesInString = `${entireExistingMessageInString}
   Naruto: ${plainMessageFromNaruto}
   `
+
+  console.log({
+    newMessages,
+    newMessagesInString,
+    newMessageFromAuthor,
+    newMessageFromNaruto,
+  })
 
   return {
     messageState: {
