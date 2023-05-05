@@ -132,6 +132,7 @@ main {
   .chat-container {
     max-height: calc(90vh - 45px - 67px);
     padding: 20px 50px;
+    border-radius: 5px;
   }
 
   .chat-message p {

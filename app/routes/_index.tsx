@@ -54,17 +54,36 @@ const initialMessageState: MessageState = {
 export default function Index() {
   const navigation = useNavigation()
   const actionData = useActionData<typeof action>()
-  const scrollElementRef = useRef<HTMLDivElement>(null)
   const [messageState, setMessageState] = useState<MessageState>(
     actionData?.messageState ?? initialMessageState
   )
   const [newValue, setNewValue] = useState('')
-
   const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const [isScrollElementRefInitialized, setIsScrollElementRefInitialized] =
+    useState(false)
+  const scrollElementRef = useRef<HTMLDivElement>(null)
 
   const isLoadingAfterSubmission =
     navigation.state === 'loading' && navigation.formMethod === 'post'
   const isSubmitting = navigation.state === 'submitting'
+  const isLoadingOrSubmitting = isLoadingAfterSubmission || isSubmitting
+
+  useEffect(() => {
+    setIsScrollElementRefInitialized(true)
+
+    const messagesInString = localStorage.getItem(MESSAGES_IN_STRING)
+    const messages = z
+      .array(MessageSchema)
+      .nullable()
+      .parse(JSON.parse(localStorage.getItem(MESSAGES) as string))
+
+    if (messagesInString && messages) {
+      setMessageState({
+        messagesInString,
+        messages,
+      })
+    }
+  }, [])
 
   useEffect(() => {
     if (actionData) {
@@ -73,19 +92,37 @@ export default function Index() {
         messages: actionData.messageState.messages,
       })
 
-      scrollElementRef.current?.focus()
+      localStorage.setItem(
+        MESSAGES_IN_STRING,
+        actionData.messageState[MESSAGES_IN_STRING]
+      )
+      localStorage.setItem(
+        MESSAGES,
+        JSON.stringify(actionData.messageState[MESSAGES])
+      )
+
+      if (isScrollElementRefInitialized) {
+        scrollElementRef.current?.scrollIntoView({ behavior: 'smooth' })
+      }
     }
-  }, [actionData])
+  }, [actionData, isScrollElementRefInitialized])
 
   useEffect(() => {
     if (navigation.state === 'idle') {
       setNewValue('')
-      scrollElementRef.current?.focus()
       textareaRef.current?.focus()
-    }
-  }, [navigation.state])
 
-  const isLoadingOrSubmitting = isLoadingAfterSubmission || isSubmitting
+      if (isScrollElementRefInitialized) {
+        scrollElementRef.current?.scrollIntoView({ behavior: 'smooth' })
+      }
+    }
+  }, [isScrollElementRefInitialized, navigation.state])
+
+  useEffect(() => {
+    if (isLoadingOrSubmitting) {
+      scrollElementRef.current?.scrollIntoView({ behavior: 'smooth' })
+    }
+  }, [isLoadingOrSubmitting])
 
   return (
     <main>
