@@ -77,6 +77,8 @@ button:focus-visible {
   width: 100%;
   padding: 10px;
   background-color: var(--colors-dark);
+  position: sticky;
+  top: 0;
 }
 
 .navigation h1 {
