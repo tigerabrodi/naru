@@ -36,6 +36,7 @@ type Message = z.infer<typeof MessageSchema>
 const MessageStateSchema = z.object({
   [MESSAGES_IN_STRING]: z.string(),
   [MESSAGES]: z.array(MessageSchema),
+  isError: z.boolean(),
 })
 
 type MessageState = z.infer<typeof MessageStateSchema>
@@ -49,6 +50,7 @@ const FIRST_MESSAGE: Message = {
 const initialMessageState: MessageState = {
   messagesInString: `Naruto: ${INITIAL_MESSAGE}`,
   messages: [FIRST_MESSAGE],
+  isError: false,
 }
 
 export default function Index() {
@@ -72,15 +74,16 @@ export default function Index() {
     setIsScrollElementRefInitialized(true)
 
     const messagesInString = localStorage.getItem(MESSAGES_IN_STRING)
+    const isError = JSON.parse(localStorage.getItem('isError') || 'false')
     const messages = z
       .array(MessageSchema)
-      .nullable()
-      .parse(JSON.parse(localStorage.getItem(MESSAGES) as string))
+      .parse(JSON.parse(localStorage.getItem(MESSAGES) || '[]'))
 
-    if (messagesInString && messages) {
+    if (messagesInString && messages.length > 0) {
       setMessageState({
         messagesInString,
         messages,
+        isError,
       })
     }
   }, [])
@@ -90,6 +93,7 @@ export default function Index() {
       setMessageState({
         messagesInString: actionData.messageState.messagesInString,
         messages: actionData.messageState.messages,
+        isError: actionData.messageState.isError,
       })
 
       localStorage.setItem(
@@ -99,6 +103,10 @@ export default function Index() {
       localStorage.setItem(
         MESSAGES,
         JSON.stringify(actionData.messageState[MESSAGES])
+      )
+      localStorage.setItem(
+        'isError',
+        JSON.stringify(actionData.messageState.isError)
       )
 
       if (isScrollElementRefInitialized) {
@@ -160,7 +168,9 @@ export default function Index() {
           value={newValue}
           onChange={(event) => setNewValue(event.target.value)}
           ref={textareaRef}
-          disabled={isLoadingOrSubmitting}
+          disabled={
+            isLoadingOrSubmitting || Boolean(actionData?.messageState.isError)
+          }
           required
         />
 
@@ -179,7 +189,11 @@ export default function Index() {
         <button
           type="submit"
           aria-label="Send message"
-          disabled={newValue.length === 0 || isLoadingOrSubmitting}
+          disabled={
+            newValue.length === 0 ||
+            isLoadingOrSubmitting ||
+            Boolean(actionData?.messageState.isError)
+          }
         >
           <Kunai />
         </button>
@@ -196,18 +210,32 @@ const FormActionSchema = zfd.formData(
   })
 )
 
-export const messageSchema = z.object({
+const messageSchema = z.object({
   role: z.string(),
   content: z.string(),
 })
 
-export const choiceSchema = z.object({
+const choiceSchema = z.object({
   message: messageSchema,
   finish_reason: z.string().nullable(),
   index: z.number(),
 })
 
-const responseSchema = z.array(choiceSchema)
+const errorSchema = z.object({
+  message: z.string(),
+  type: z.literal('invalid_request_error'),
+  param: z.literal('messages'),
+  code: z.literal('context_length_exceeded'),
+})
+
+const responseSchema = z.union([
+  z.object({
+    choices: z.array(choiceSchema),
+  }),
+  z.object({
+    error: errorSchema,
+  }),
+])
 
 export const action = async ({ request }: DataFunctionArgs) => {
   const { newMessage, messages, messagesInString } = FormActionSchema.parse(
@@ -252,10 +280,47 @@ export const action = async ({ request }: DataFunctionArgs) => {
     body: JSON.stringify(payload),
   })
 
-  const data = await response.json()
+  const responseData = await response.json()
 
-  const choices = responseSchema.parse(data.choices)
-  const choice = choices[0]
+  console.log('responseData', responseData)
+
+  const data = responseSchema.parse(responseData)
+
+  if ('error' in data) {
+    const errorMessageFromNaruto = `Sorry, an error has happened with the API. I can't help you anymore. Please clean the conversation and start again.`
+
+    const newMessageFromNaruto: Message = {
+      id: v1(),
+      isAuthor: false,
+      message: errorMessageFromNaruto,
+    }
+
+    const newMessageFromAuthor: Message = {
+      id: v1(),
+      isAuthor: true,
+      message: newMessage,
+    }
+
+    const newMessages: Array<Message> = [
+      ...messages,
+      newMessageFromAuthor,
+      newMessageFromNaruto,
+    ]
+
+    const newMessagesInString = `${entireExistingMessageInString}
+  Naruto: ${errorMessageFromNaruto}
+  `
+
+    return {
+      messageState: {
+        [MESSAGES_IN_STRING]: newMessagesInString,
+        [MESSAGES]: newMessages,
+        isError: true,
+      },
+    }
+  }
+
+  const choice = data.choices[0]
   const narutoMessage = choice.message.content
 
   const plainMessageFromNaruto = narutoMessage.startsWith('Naruto: ')
@@ -284,17 +349,11 @@ export const action = async ({ request }: DataFunctionArgs) => {
   Naruto: ${plainMessageFromNaruto}
   `
 
-  console.log({
-    newMessages,
-    newMessagesInString,
-    newMessageFromAuthor,
-    newMessageFromNaruto,
-  })
-
   return {
     messageState: {
       [MESSAGES_IN_STRING]: newMessagesInString,
       [MESSAGES]: newMessages,
+      isError: false,
     },
   }
 }
