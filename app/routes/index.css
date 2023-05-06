@@ -8,7 +8,7 @@ main {
 
 .chat-container {
   width: 100%;
-  max-height: calc(100vh - 94px);
+  max-height: calc(100vh - 102px);
   height: 100%;
   row-gap: 26px;
   display: flex;
@@ -49,7 +49,7 @@ main {
   font-size: calc(1rem * 8 / 16);
   color: var(--colors-light);
   background-color: var(--colors-red);
-  max-width: 50%;
+  max-width: 48%;
   white-space: pre-wrap;
 }
 
@@ -81,7 +81,7 @@ main {
   width: 80%;
   color: var(--colors-dark);
   box-shadow: 0 0 2px var(--colors-pink);
-  font-size: calc(1rem * 10 / 16);
+  font-size: calc(1rem * 9 / 16);
   font-weight: 500;
   padding: 5px;
   resize: none;
@@ -89,8 +89,8 @@ main {
 }
 
 .input-container svg {
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
 }
 
 #loading-text {
