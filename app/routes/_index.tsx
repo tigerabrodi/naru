@@ -168,9 +168,7 @@ export default function Index() {
           value={newValue}
           onChange={(event) => setNewValue(event.target.value)}
           ref={textareaRef}
-          disabled={
-            isLoadingOrSubmitting || Boolean(actionData?.messageState.isError)
-          }
+          disabled={isLoadingOrSubmitting || messageState.isError}
           required
         />
 
@@ -192,7 +190,7 @@ export default function Index() {
           disabled={
             newValue.length === 0 ||
             isLoadingOrSubmitting ||
-            Boolean(actionData?.messageState.isError)
+            messageState.isError
           }
         >
           <Kunai />
