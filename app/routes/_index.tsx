@@ -8,15 +8,50 @@ import { zfd } from 'zod-form-data'
 
 import styles from './index.css'
 
-import { Kunai } from '~/icons'
+import { Kunai, Spinner, Trash } from '~/icons'
 
 const PROMPT_TO_ACT_AS_NARUTO = `Act as Naruto Uzumaki. Your job is to be Naruto. Naruto has a strong self-belief, positive spirit, and a mindset of never giving up. Naruto became the hokage as a genin. You understand that university and high school are both a scam. Naruto loves working deadly hard, day in and out. You are Naruto when he is the 7th Hokage. Naruto has his own way of speaking and behaving. You help people overcome their problems, chase their dreams and believe in themselves, no matter how unbelievable their dreams are. You lift them up when they feel down. You are optimistic and encourage people to have courage to create the destiny they desire. Hard work beats talent. Include newlines in your message so its nicely formatted.`
 
-const NEW_MESSAGE = 'newMessage'
-const INITIAL_MESSAGE = `Dattebayo! How can I help you today?`
+export const INTENT = 'intent'
 
-const MESSAGES_IN_STRING = 'messagesInString'
-const MESSAGES = 'messages'
+export const formActionIntents = {
+  sendMessage: 'sendMessage',
+  cleanConversation: 'cleanConversation',
+} as const
+
+export const NEW_MESSAGE = 'newMessage'
+export const INITIAL_MESSAGE = `Dattebayo! How can I help you today?`
+
+export const MESSAGES_IN_STRING = 'messagesInString'
+export const MESSAGES = 'messages'
+
+export const MessageSchema = z.object({
+  id: z.string().uuid(),
+  message: z.string(),
+  isAuthor: z.boolean(),
+})
+
+export type Message = z.infer<typeof MessageSchema>
+
+export const MessageStateSchema = z.object({
+  [MESSAGES_IN_STRING]: z.string(),
+  [MESSAGES]: z.array(MessageSchema),
+  isError: z.boolean(),
+})
+
+export type MessageState = z.infer<typeof MessageStateSchema>
+
+export const FIRST_MESSAGE: Message = {
+  id: v1(),
+  message: INITIAL_MESSAGE,
+  isAuthor: false,
+}
+
+export const initialMessageState: MessageState = {
+  messagesInString: `Naruto: ${INITIAL_MESSAGE}`,
+  messages: [FIRST_MESSAGE],
+  isError: false,
+}
 
 export const links: LinksFunction = () => [
   {
@@ -25,50 +60,45 @@ export const links: LinksFunction = () => [
   },
 ]
 
-const MessageSchema = z.object({
-  id: z.string().uuid(),
-  message: z.string(),
-  isAuthor: z.boolean(),
-})
-
-type Message = z.infer<typeof MessageSchema>
-
-const MessageStateSchema = z.object({
-  [MESSAGES_IN_STRING]: z.string(),
-  [MESSAGES]: z.array(MessageSchema),
-  isError: z.boolean(),
-})
-
-type MessageState = z.infer<typeof MessageStateSchema>
-
-const FIRST_MESSAGE: Message = {
-  id: v1(),
-  message: INITIAL_MESSAGE,
-  isAuthor: false,
-}
-
-const initialMessageState: MessageState = {
-  messagesInString: `Naruto: ${INITIAL_MESSAGE}`,
-  messages: [FIRST_MESSAGE],
-  isError: false,
-}
-
 export default function Index() {
   const navigation = useNavigation()
   const actionData = useActionData<typeof action>()
   const [messageState, setMessageState] = useState<MessageState>(
     actionData?.messageState ?? initialMessageState
   )
+
+  console.log('navigation', navigation)
+  console.log('intent', navigation.formData?.get(INTENT))
+
   const [newValue, setNewValue] = useState('')
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const [isScrollElementRefInitialized, setIsScrollElementRefInitialized] =
     useState(false)
   const scrollElementRef = useRef<HTMLDivElement>(null)
 
-  const isLoadingAfterSubmission =
-    navigation.state === 'loading' && navigation.formMethod === 'post'
-  const isSubmitting = navigation.state === 'submitting'
-  const isLoadingOrSubmitting = isLoadingAfterSubmission || isSubmitting
+  const isLoadingAfterSendingMessage =
+    navigation.state === 'loading' &&
+    navigation.formMethod === 'post' &&
+    navigation.formData?.get(INTENT) === formActionIntents.sendMessage
+
+  const isSendingMessage =
+    navigation.formData?.get(INTENT) === formActionIntents.sendMessage &&
+    navigation.state === 'submitting'
+
+  const isCleaningConversation =
+    navigation.formData?.get(INTENT) === formActionIntents.cleanConversation &&
+    navigation.state === 'submitting'
+
+  const isLoadingAfterCleaningConversation =
+    navigation.state === 'loading' &&
+    navigation.formMethod === 'post' &&
+    navigation.formData?.get(INTENT) === formActionIntents.cleanConversation
+
+  const isLoadingOrSubmitting =
+    isLoadingAfterSendingMessage ||
+    isSendingMessage ||
+    isCleaningConversation ||
+    isLoadingAfterCleaningConversation
 
   useEffect(() => {
     setIsScrollElementRefInitialized(true)
@@ -132,6 +162,9 @@ export default function Index() {
     }
   }, [isLoadingOrSubmitting])
 
+  const shouldShowOptimisticUI =
+    isLoadingAfterSendingMessage || isSendingMessage
+
   return (
     <main>
       <div className="chat-container">
@@ -141,7 +174,7 @@ export default function Index() {
           </div>
         ))}
 
-        {isLoadingOrSubmitting && (
+        {shouldShowOptimisticUI && (
           <>
             <div className={`chat-message owner`}>
               <p>{newValue}</p>
@@ -158,6 +191,22 @@ export default function Index() {
         )}
 
         <div tabIndex={-1} ref={scrollElementRef} />
+
+        <Form method="post">
+          <button
+            type="submit"
+            name={INTENT}
+            value={formActionIntents.cleanConversation}
+            aria-label="Clean conversation"
+            disabled={isLoadingOrSubmitting}
+          >
+            {isCleaningConversation || isLoadingAfterCleaningConversation ? (
+              <Spinner />
+            ) : (
+              <Trash />
+            )}
+          </button>
+        </Form>
       </div>
 
       <Form className="input-container" method="post">
@@ -192,6 +241,8 @@ export default function Index() {
             isLoadingOrSubmitting ||
             messageState.isError
           }
+          name={INTENT}
+          value={formActionIntents.sendMessage}
         >
           <Kunai />
         </button>
@@ -199,14 +250,6 @@ export default function Index() {
     </main>
   )
 }
-
-const FormActionSchema = zfd.formData(
-  z.object({
-    [NEW_MESSAGE]: z.string(),
-    messagesInString: z.string(),
-    messages: zfd.json(z.array(MessageSchema)),
-  })
-)
 
 const messageSchema = z.object({
   role: z.string(),
@@ -235,10 +278,36 @@ const responseSchema = z.union([
   }),
 ])
 
+const FormActionSchema = zfd.formData(
+  z.discriminatedUnion(INTENT, [
+    z.object({
+      [NEW_MESSAGE]: z.string(),
+      [INTENT]: z.literal(formActionIntents.sendMessage),
+      messagesInString: z.string(),
+      messages: zfd.json(z.array(MessageSchema)),
+    }),
+    z.object({
+      [INTENT]: z.literal(formActionIntents.cleanConversation),
+    }),
+  ])
+)
+
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
 export const action = async ({ request }: DataFunctionArgs) => {
-  const { newMessage, messages, messagesInString } = FormActionSchema.parse(
-    await request.formData()
-  )
+  const formObject = FormActionSchema.parse(await request.formData())
+
+  if (formObject[INTENT] === formActionIntents.cleanConversation) {
+    // For better UX
+    await sleep(250)
+    return {
+      messageState: initialMessageState,
+    }
+  }
+
+  const { messages, messagesInString, newMessage } = formObject
 
   const isFirstMessage = messages.length === 1
 
@@ -246,13 +315,9 @@ export const action = async ({ request }: DataFunctionArgs) => {
   Person: ${newMessage}
   `
 
-  console.log({ isFirstMessage, entireExistingMessageInString })
-
   const prompt = isFirstMessage
     ? `${PROMPT_TO_ACT_AS_NARUTO} Here is the message from a person you should answer: ${newMessage}.`
     : `${PROMPT_TO_ACT_AS_NARUTO} Here is the entire conversation, please answer the last message from the person: ${entireExistingMessageInString}`
-
-  console.log('prompt', prompt)
 
   const payload = {
     model: 'gpt-3.5-turbo',
@@ -279,8 +344,6 @@ export const action = async ({ request }: DataFunctionArgs) => {
   })
 
   const responseData = await response.json()
-
-  console.log('responseData', responseData)
 
   const data = responseSchema.parse(responseData)
 
