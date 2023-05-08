@@ -104,3 +104,13 @@ button:focus-visible {
     width: 77px;
   }
 }
+
+.spinning {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
