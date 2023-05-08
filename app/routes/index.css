@@ -4,12 +4,12 @@ main {
   align-items: center;
   width: 100%;
   height: 100%;
+  position: relative;
 }
 
 .chat-container {
   width: 100%;
-  max-height: calc(100vh - 102px);
-  height: 100%;
+  height: calc(100vh - 102px);
   row-gap: 26px;
   display: flex;
   flex-direction: column;
@@ -32,24 +32,23 @@ main {
   border: 4px solid var(--colors-red);
 }
 
-.chat-container form {
-  position: fixed;
-  bottom: 90px;
-  right: 45px;
+.clean-conversation {
+  position: absolute;
+  bottom: 60px;
+  right: 11px;
 }
 
-.chat-container form button {
+.clean-conversation button {
   display: flex;
   align-items: center;
   justify-content: center;
-  position: absolute;
   padding: 5px;
   border-radius: 5px;
   background-color: var(--colors-pink);
   box-shadow: 0 0 2px var(--colors-pink);
 }
 
-.chat-container form button svg {
+.clean-conversation button svg {
   width: 20px;
 }
 
@@ -159,6 +158,7 @@ main {
   main {
     max-width: 1200px;
     row-gap: 30px;
+    height: auto;
   }
 
   #loading-text {
@@ -171,7 +171,7 @@ main {
   }
 
   .chat-container {
-    max-height: calc(90vh - 45px - 67px);
+    height: calc(90vh - 45px - 67px);
     padding: 20px 50px;
     border-radius: 5px;
   }
@@ -197,5 +197,20 @@ main {
   .input-container svg {
     width: 40px;
     height: 40px;
+  }
+
+  .clean-conversation {
+    bottom: 117px;
+    right: 18px;
+  }
+
+  .clean-conversation button {
+    border-radius: 7px;
+    padding: 7px;
+    box-shadow: 0 0 5px var(--colors-pink);
+  }
+
+  .clean-conversation button svg {
+    width: 32px;
   }
 }

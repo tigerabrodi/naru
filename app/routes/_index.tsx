@@ -191,23 +191,23 @@ export default function Index() {
         )}
 
         <div tabIndex={-1} ref={scrollElementRef} />
-
-        <Form method="post">
-          <button
-            type="submit"
-            name={INTENT}
-            value={formActionIntents.cleanConversation}
-            aria-label="Clean conversation"
-            disabled={isLoadingOrSubmitting}
-          >
-            {isCleaningConversation || isLoadingAfterCleaningConversation ? (
-              <Spinner />
-            ) : (
-              <Trash />
-            )}
-          </button>
-        </Form>
       </div>
+
+      <Form method="post" className="clean-conversation">
+        <button
+          type="submit"
+          name={INTENT}
+          value={formActionIntents.cleanConversation}
+          aria-label="Clean conversation"
+          disabled={isLoadingOrSubmitting}
+        >
+          {isCleaningConversation || isLoadingAfterCleaningConversation ? (
+            <Spinner />
+          ) : (
+            <Trash />
+          )}
+        </button>
+      </Form>
 
       <Form className="input-container" method="post">
         <textarea
