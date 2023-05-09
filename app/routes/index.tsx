@@ -106,7 +106,11 @@ export default function Index() {
       .array(MessageSchema)
       .parse(JSON.parse(localStorage.getItem(MESSAGES) || '[]'))
 
-    if (messagesInString && messages.length > 0) {
+    if (
+      messagesInString &&
+      messagesInString.length > 0 &&
+      messages.length > 0
+    ) {
       setMessageState({
         messagesInString,
         messages,
