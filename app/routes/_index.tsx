@@ -67,9 +67,6 @@ export default function Index() {
     actionData?.messageState ?? initialMessageState
   )
 
-  console.log('navigation', navigation)
-  console.log('intent', navigation.formData?.get(INTENT))
-
   const [newValue, setNewValue] = useState('')
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const [isScrollElementRefInitialized, setIsScrollElementRefInitialized] =
