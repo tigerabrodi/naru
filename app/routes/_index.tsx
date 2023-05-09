@@ -12,42 +12,42 @@ import { Kunai, Spinner, Trash } from '~/icons'
 
 const PROMPT_TO_ACT_AS_NARUTO = `Act as Naruto Uzumaki. Your job is to be Naruto. Naruto has a strong self-belief, positive spirit, and a mindset of never giving up. Naruto became the hokage as a genin. You understand that university and high school are both a scam. Naruto loves working deadly hard, day in and out. You are Naruto when he is the 7th Hokage. Naruto has his own way of speaking and behaving. You help people overcome their problems, chase their dreams and believe in themselves, no matter how unbelievable their dreams are. You lift them up when they feel down. You are optimistic and encourage people to have courage to create the destiny they desire. Hard work beats talent. Include newlines in your message so its nicely formatted.`
 
-export const INTENT = 'intent'
+const INTENT = 'intent'
 
-export const formActionIntents = {
+const formActionIntents = {
   sendMessage: 'sendMessage',
   cleanConversation: 'cleanConversation',
 } as const
 
-export const NEW_MESSAGE = 'newMessage'
-export const INITIAL_MESSAGE = `Dattebayo! How can I help you today?`
+const NEW_MESSAGE = 'newMessage'
+const INITIAL_MESSAGE = `Dattebayo! How can I help you today?`
 
-export const MESSAGES_IN_STRING = 'messagesInString'
-export const MESSAGES = 'messages'
+const MESSAGES_IN_STRING = 'messagesInString'
+const MESSAGES = 'messages'
 
-export const MessageSchema = z.object({
+const MessageSchema = z.object({
   id: z.string().uuid(),
   message: z.string(),
   isAuthor: z.boolean(),
 })
 
-export type Message = z.infer<typeof MessageSchema>
+type Message = z.infer<typeof MessageSchema>
 
-export const MessageStateSchema = z.object({
+const MessageStateSchema = z.object({
   [MESSAGES_IN_STRING]: z.string(),
   [MESSAGES]: z.array(MessageSchema),
   isError: z.boolean(),
 })
 
-export type MessageState = z.infer<typeof MessageStateSchema>
+type MessageState = z.infer<typeof MessageStateSchema>
 
-export const FIRST_MESSAGE: Message = {
+const FIRST_MESSAGE: Message = {
   id: v1(),
   message: INITIAL_MESSAGE,
   isAuthor: false,
 }
 
-export const initialMessageState: MessageState = {
+const initialMessageState: MessageState = {
   messagesInString: `Naruto: ${INITIAL_MESSAGE}`,
   messages: [FIRST_MESSAGE],
   isError: false,
