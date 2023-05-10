@@ -67,7 +67,7 @@ main {
   border-radius: 7px;
   border-bottom-left-radius: 0;
   font-weight: 400;
-  font-size: calc(1rem * 8 / 16);
+  font-size: calc(1rem * 10 / 16);
   color: var(--colors-light);
   background-color: var(--colors-red);
   max-width: 48%;
