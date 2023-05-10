@@ -9,11 +9,11 @@ main {
 
 .chat-container {
   width: 100%;
-  height: calc(100vh - 102px);
+  height: calc(100vh - 52px - 78px);
   row-gap: 26px;
   display: flex;
   flex-direction: column;
-  padding: 10px 20px;
+  padding: 20px;
   background-color: var(--colors-light);
   overflow-y: auto;
   scrollbar-width: thin;
@@ -34,22 +34,22 @@ main {
 
 .clean-conversation {
   position: absolute;
-  bottom: 60px;
-  right: 11px;
+  bottom: 95px;
+  right: 20px;
 }
 
 .clean-conversation button {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 5px;
-  border-radius: 5px;
+  padding: 7px;
+  border-radius: 3px;
   background-color: var(--colors-pink);
-  box-shadow: 0 0 2px var(--colors-pink);
+  box-shadow: 0 0 3px var(--colors-pink);
 }
 
 .clean-conversation button svg {
-  width: 20px;
+  width: 24px;
 }
 
 .chat-message {
@@ -90,7 +90,7 @@ main {
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding: 10px 20px;
+  padding: 20px 5px;
   column-gap: 16px;
   background-color: var(--colors-brown);
 }
@@ -102,16 +102,16 @@ main {
   width: 80%;
   color: var(--colors-dark);
   box-shadow: 0 0 2px var(--colors-pink);
-  font-size: calc(1rem * 9 / 16);
-  font-weight: 500;
+  font-size: calc(1rem * 13 / 16);
+  font-weight: 400;
   padding: 5px;
   resize: none;
   overflow: hidden;
 }
 
 .input-container svg {
-  width: 20px;
-  height: 20px;
+  width: 28px;
+  height: 28px;
 }
 
 #loading-text {
