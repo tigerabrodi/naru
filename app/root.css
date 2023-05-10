@@ -75,7 +75,7 @@ button:focus-visible {
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  padding: 10px;
+  padding: 15px;
   background-color: var(--colors-dark);
   position: sticky;
   top: 0;
@@ -83,12 +83,12 @@ button:focus-visible {
 
 .navigation h1 {
   font-weight: 700;
-  font-size: calc(1rem * 18 / 16);
+  font-size: calc(1rem * 24 / 16);
   color: var(--colors-pink);
 }
 
 .navigation svg {
-  width: 54px;
+  width: 60px;
 }
 
 @media screen and (min-width: 1024px) {
