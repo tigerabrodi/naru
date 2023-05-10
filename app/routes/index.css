@@ -9,7 +9,7 @@ main {
 
 .chat-container {
   width: 100%;
-  height: calc(100vh - 52px - 78px);
+  height: calc(100vh - 66px - 80px);
   row-gap: 26px;
   display: flex;
   flex-direction: column;
@@ -25,11 +25,11 @@ main {
 }
 
 .chat-container::-webkit-scrollbar-track {
-  background-color: var(--colors-dark);
+  background-color: var(--colors-pink);
 }
 
 .chat-container::-webkit-scrollbar-thumb {
-  border: 4px solid var(--colors-red);
+  border: 4px solid #c91b0b;
 }
 
 .clean-conversation {
@@ -67,10 +67,10 @@ main {
   border-radius: 7px;
   border-bottom-left-radius: 0;
   font-weight: 400;
-  font-size: calc(1rem * 10 / 16);
+  font-size: calc(1rem * 12 / 16);
   color: var(--colors-light);
   background-color: var(--colors-red);
-  max-width: 48%;
+  max-width: 60%;
   white-space: pre-wrap;
 }
 
@@ -110,8 +110,8 @@ main {
 }
 
 .input-container svg {
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
 }
 
 #loading-text {
