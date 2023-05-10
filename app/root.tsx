@@ -11,6 +11,7 @@ import {
   Scripts,
   ScrollRestoration,
 } from '@remix-run/react'
+import { Analytics } from '@vercel/analytics/react'
 
 import { Naruto } from './icons'
 import rootCSS from './root.css'
@@ -46,6 +47,7 @@ export default function App() {
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
+        <Analytics />
       </body>
     </html>
   )
