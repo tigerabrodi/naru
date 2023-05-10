@@ -63,8 +63,9 @@ export const links: LinksFunction = () => [
 export default function Index() {
   const navigation = useNavigation()
   const actionData = useActionData<typeof action>()
+
   const [messageState, setMessageState] = useState<MessageState>(
-    actionData?.messageState ?? initialMessageState
+    actionData?.messageState || initialMessageState
   )
 
   const [newValue, setNewValue] = useState('')
@@ -214,7 +215,7 @@ export default function Index() {
         <textarea
           name={NEW_MESSAGE}
           aria-label="Enter message to tell naruto"
-          placeholder="I want to drop out of high school and become a rapper..."
+          placeholder="I want to drop out of high school and become a software engineer..."
           value={newValue}
           onChange={(event) => setNewValue(event.target.value)}
           ref={textareaRef}
