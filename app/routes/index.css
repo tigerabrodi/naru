@@ -169,7 +169,7 @@ main {
   }
 
   .chat-container {
-    height: calc(90vh - 45px - 67px);
+    height: calc(90vh - 45px - 67px) !important;
     padding: 20px 50px;
     border-radius: 5px;
   }
