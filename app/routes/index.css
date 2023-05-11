@@ -8,7 +8,6 @@ main {
 
 .chat-container {
   width: 100%;
-  height: calc(100vh - 66px - 80px);
   row-gap: 26px;
   display: flex;
   flex-direction: column;

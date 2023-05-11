@@ -68,6 +68,22 @@ export default function Index() {
     actionData?.messageState || initialMessageState
   )
 
+  const [chatHeight, setChatHeight] = useState(0)
+
+  useEffect(() => {
+    const windowHeight = window.innerHeight
+    const headerHeight = document.querySelector('nav')!.offsetHeight
+    const inputHeight = (
+      document.querySelector('.input-container') as HTMLElement
+    ).offsetHeight
+
+    console.log({ windowHeight, headerHeight, inputHeight })
+    const newChatHeight = windowHeight - headerHeight - inputHeight
+    setChatHeight(newChatHeight)
+  }, [])
+
+  console.log({ chatHeight })
+
   const [newValue, setNewValue] = useState('')
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const [isScrollElementRefInitialized, setIsScrollElementRefInitialized] =
@@ -169,7 +185,13 @@ export default function Index() {
 
   return (
     <main>
-      <div className="chat-container">
+      <div
+        className="chat-container"
+        style={{
+          height:
+            chatHeight === 0 ? 'calc(100vh - 66px - 80px)' : `${chatHeight}px`,
+        }}
+      >
         {messageState[MESSAGES].map(({ id, isAuthor, message }) => (
           <div className={`chat-message ${isAuthor ? 'owner' : ''}`} key={id}>
             <p>{message}</p>
