@@ -68,8 +68,6 @@ export default function Index() {
     actionData?.messageState || initialMessageState
   )
 
-  console.log('messageState', messageState)
-
   const [chatHeight, setChatHeight] = useState(0)
 
   useEffect(() => {
@@ -121,8 +119,6 @@ export default function Index() {
     const messages = z
       .array(MessageSchema)
       .parse(JSON.parse(localStorage.getItem(MESSAGES) || '[]'))
-
-    console.log('messagesInString', messagesInString)
 
     if (
       messagesInString &&
