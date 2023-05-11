@@ -77,12 +77,9 @@ export default function Index() {
       document.querySelector('.input-container') as HTMLElement
     ).offsetHeight
 
-    console.log({ windowHeight, headerHeight, inputHeight })
     const newChatHeight = windowHeight - headerHeight - inputHeight
     setChatHeight(newChatHeight)
   }, [])
-
-  console.log({ chatHeight })
 
   const [newValue, setNewValue] = useState('')
   const textareaRef = useRef<HTMLTextAreaElement>(null)
