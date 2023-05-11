@@ -139,11 +139,7 @@ export default function Index() {
 
   useEffect(() => {
     if (actionData) {
-      setMessageState({
-        messagesInString: actionData.messageState.messagesInString,
-        messages: actionData.messageState.messages,
-        isError: actionData.messageState.isError,
-      })
+      setMessageState(actionData.messageState)
 
       localStorage.setItem(
         MESSAGES_IN_STRING,
