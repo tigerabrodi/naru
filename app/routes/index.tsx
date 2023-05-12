@@ -64,13 +64,9 @@ export default function Index() {
   const navigation = useNavigation()
   const actionData = useActionData<typeof action>()
 
-  console.log('actionData in render:', actionData)
-
   const [messageState, setMessageState] = useState<MessageState>(
     actionData?.messageState || initialMessageState
   )
-
-  console.log('messageState in render:', messageState)
 
   const [chatHeight, setChatHeight] = useState(0)
 
@@ -138,8 +134,6 @@ export default function Index() {
   }, [])
 
   useEffect(() => {
-    console.log('actionData in useEffect:', actionData)
-
     if (actionData) {
       setMessageState(actionData.messageState)
 
