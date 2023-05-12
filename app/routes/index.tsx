@@ -170,9 +170,7 @@ export default function Index() {
     }
   }, [isLoadingOrSubmitting])
 
-  const shouldShowOptimisticUI =
-    isLoadingAfterSubmission(formActionIntents.sendMessage) ||
-    isSubmitting(formActionIntents.sendMessage)
+  const shouldShowOptimisticUI = isSubmitting(formActionIntents.sendMessage)
 
   return (
     <main>
