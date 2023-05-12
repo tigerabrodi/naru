@@ -67,9 +67,7 @@ export default function Index() {
   console.log('actionData in render:', actionData)
 
   const [messageState, setMessageState] = useState<MessageState>(
-    actionData && 'messageState' in actionData
-      ? actionData.messageState
-      : initialMessageState
+    actionData?.messageState || initialMessageState
   )
 
   console.log('messageState in render:', messageState)
