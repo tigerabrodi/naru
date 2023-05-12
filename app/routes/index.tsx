@@ -87,29 +87,26 @@ export default function Index() {
     useState(false)
   const scrollElementRef = useRef<HTMLDivElement>(null)
 
-  const isLoadingAfterSendingMessage =
-    navigation.state === 'loading' &&
-    navigation.formMethod === 'post' &&
-    navigation.formData?.get(INTENT) === formActionIntents.sendMessage
+  function isSubmitting(intent: string) {
+    return (
+      navigation.state === 'submitting' &&
+      navigation.formData?.get(INTENT) === intent
+    )
+  }
 
-  const isSendingMessage =
-    navigation.formData?.get(INTENT) === formActionIntents.sendMessage &&
-    navigation.state === 'submitting'
-
-  const isCleaningConversation =
-    navigation.formData?.get(INTENT) === formActionIntents.cleanConversation &&
-    navigation.state === 'submitting'
-
-  const isLoadingAfterCleaningConversation =
-    navigation.state === 'loading' &&
-    navigation.formMethod === 'post' &&
-    navigation.formData?.get(INTENT) === formActionIntents.cleanConversation
+  function isLoadingAfterSubmission(intent: string) {
+    return (
+      navigation.state === 'loading' &&
+      navigation.formData?.get(INTENT) === intent &&
+      navigation.formMethod === 'post'
+    )
+  }
 
   const isLoadingOrSubmitting =
-    isLoadingAfterSendingMessage ||
-    isSendingMessage ||
-    isCleaningConversation ||
-    isLoadingAfterCleaningConversation
+    isLoadingAfterSubmission(formActionIntents.sendMessage) ||
+    isSubmitting(formActionIntents.sendMessage) ||
+    isSubmitting(formActionIntents.cleanConversation) ||
+    isLoadingAfterSubmission(formActionIntents.cleanConversation)
 
   useEffect(() => {
     setIsScrollElementRefInitialized(true)
@@ -174,7 +171,8 @@ export default function Index() {
   }, [isLoadingOrSubmitting])
 
   const shouldShowOptimisticUI =
-    isLoadingAfterSendingMessage || isSendingMessage
+    isLoadingAfterSubmission(formActionIntents.sendMessage) ||
+    isSubmitting(formActionIntents.sendMessage)
 
   return (
     <main>
@@ -218,7 +216,8 @@ export default function Index() {
           aria-label="Clean conversation"
           disabled={isLoadingOrSubmitting}
         >
-          {isCleaningConversation || isLoadingAfterCleaningConversation ? (
+          {isSubmitting(formActionIntents.cleanConversation) ||
+          isLoadingAfterSubmission(formActionIntents.cleanConversation) ? (
             <Spinner />
           ) : (
             <Trash />
